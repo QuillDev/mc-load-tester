@@ -2,7 +2,7 @@ import {readFile} from "fs/promises";
 import {LoadTesterConfig} from "../../types/loadTesterConfig";
 
 const defaultConfig: LoadTesterConfig = {
-    amount: 60,
+    amount: 10,
     hostname: "localhost",
     port: 25565,
     namePath: "./words.txt",
