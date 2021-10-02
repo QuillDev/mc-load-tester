@@ -29,7 +29,7 @@ import {generateSessionData} from "./src/spawner/generateSessionData";
 
         let success = 0;
         await Promise.all(loginData.map(async (config) => {
-            await login(config);
+            await login(config).then(() => success++);
         }));
         console.info(`Processed ${success}/${loginData.length} sessions.`);
     }
