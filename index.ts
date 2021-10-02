@@ -18,11 +18,12 @@ import {generateSessionData} from "./src/spawner/generateSessionData";
         const totalUsers = args["amount"] ?? 11 as number;
         const host = args["host"] ?? "localhost" as string;
         const port = args["port"] as number ?? 25565;
+        const wait = args["wait"] as number ?? 5000;
         const namePath = args["namePath"] ?? "./resources/names.txt" as string;
         await loadWords(namePath);
 
         let sessionData = await generateSessionData(sessions, totalUsers, host, port);
-        await spawnInstances(sessionData);
+        await spawnInstances(sessionData, wait);
     } else {
         const data = args["data"] ?? "" as string;
         let loginData: BotOptions[] = (!data) ? [] : JSON.parse(Buffer.from(data, 'base64').toString());
