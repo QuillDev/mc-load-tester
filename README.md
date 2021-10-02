@@ -21,9 +21,10 @@ yarn start
 * ``host`` - the hostname to use for connecting
 * ``port`` - the port to use for connecting
 * ``namePath`` - the path to read names from for bots
-* ``wait`` - the time to wait between session starts
+* ``delay`` - delay before a new session starts
 
 ## Example CLI
+
 ```bash
-yarn start --amount=60 --sessions=6 --host=localhost --port=25565
+yarn start --amount=60 --sessions=6 --host=localhost --port=25565 --delay=2000
 ```
