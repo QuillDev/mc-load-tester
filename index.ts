@@ -31,6 +31,6 @@ import {generateSessionData} from "./src/spawner/generateSessionData";
         await Promise.all(loginData.map(async (config) => {
             await login(config);
         }));
-        console.info(`Logged in ${success}/${loginData.length} sessions.`);
+        console.info(`Processed ${success}/${loginData.length} sessions.`);
     }
 })();
