@@ -15,7 +15,8 @@ export const generateBotConfigs = async (amount: number, host?: string, port?: n
                 skipValidation: true,
                 loadInternalPlugins: false,
                 colorsEnabled: false,
-                chat: "disabled"
+                chat: "disabled",
+                physicsEnabled: false
             }
         );
     }
