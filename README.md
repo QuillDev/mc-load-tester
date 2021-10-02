@@ -21,6 +21,7 @@ yarn start
 * ``host`` - the hostname to use for connecting
 * ``port`` - the port to use for connecting
 * ``namePath`` - the path to read names from for bots
+* ``wait`` - the time to wait between session starts
 
 ## Example CLI
 ```bash

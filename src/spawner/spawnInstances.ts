@@ -1,7 +1,8 @@
 import {ChildProcess, exec} from "child_process";
 import {SessionData} from "../@types/sessionData";
 
-export const spawnInstances = async (spawnData: SessionData[]) => {
+export const spawnInstances = async (spawnData: SessionData[], wait?: number) => {
+    wait = wait as number ?? 5000;
     const processes: { process: ChildProcess, content: string }[] = [];
 
     for (let index = 0; index < spawnData.length; index++) {
@@ -30,5 +31,13 @@ export const spawnInstances = async (spawnData: SessionData[]) => {
                 console.log('Closed before stop: Closing code: ', exit_code);
             });
         })(index)
+        await sleep(wait);
     }
+}
+
+async function sleep(ms: number): Promise<void> {
+    let promise: Promise<void> = new Promise<void>((resolve) => {
+        setTimeout(() => {resolve();}, ms);
+    });
+    return promise;
 }
