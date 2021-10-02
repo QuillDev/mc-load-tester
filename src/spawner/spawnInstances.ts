@@ -30,6 +30,6 @@ export const spawnInstances = async (spawnData: SessionData[], delay: number) =>
                 console.log('Closed before stop: Closing code: ', exit_code);
             });
         })(index)
-        await new Promise((resolve) => setTimeout(() => resolve, delay))
+        await new Promise((resolve) => setTimeout(resolve, delay))
     }
 }
