@@ -5,6 +5,7 @@ export const spawnInstances = async (spawnData: SessionData[], delay: number) =>
     const processes: { process: ChildProcess, content: string }[] = [];
 
     for (let index = 0; index < spawnData.length; index++) {
+
         await (async (index) => {
             const {data} = spawnData[index];
             const child = exec(`yarn run start --child --data=${Buffer.from(JSON.stringify(data)).toString('base64')}`);
@@ -30,6 +31,7 @@ export const spawnInstances = async (spawnData: SessionData[], delay: number) =>
                 console.log('Closed before stop: Closing code: ', exit_code);
             });
         })(index)
-        await new Promise((resolve) => setTimeout(resolve, delay))
+        await new Promise((resolve) => setTimeout(resolve, delay));
+
     }
 }

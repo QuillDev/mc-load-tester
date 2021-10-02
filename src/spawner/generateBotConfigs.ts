@@ -16,7 +16,8 @@ export const generateBotConfigs = async (amount: number, host?: string, port?: n
                 loadInternalPlugins: false,
                 colorsEnabled: false,
                 chat: "disabled",
-                physicsEnabled: false
+                physicsEnabled: false,
+                keepAlive: true
             }
         );
     }
