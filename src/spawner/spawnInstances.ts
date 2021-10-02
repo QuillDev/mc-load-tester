@@ -26,7 +26,7 @@ export const spawnInstances = async (spawnData: SessionData[], delay: number) =>
             });
 
             // Listen if the process closed
-            child.on('close', function (exit_code) {
+            child.on('close', (exit_code) => {
                 console.log('Closed before stop: Closing code: ', exit_code);
             });
         })(index)
