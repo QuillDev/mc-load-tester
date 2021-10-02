@@ -1,11 +1,12 @@
 import {readFile} from "fs/promises";
-import {LoadTesterConfig} from "../../types/loadTesterConfig";
+import {LoadTesterConfig} from "../@types/loadTesterConfig";
 
 const defaultConfig: LoadTesterConfig = {
+    sessions: 1,
     amount: 10,
-    hostname: "localhost",
+    host: "localhost",
     port: 25565,
-    namePath: "./words.txt",
+    namePath: "./resources/names.txt",
 
 };
 

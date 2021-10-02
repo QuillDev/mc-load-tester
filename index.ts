@@ -1,64 +1,36 @@
-import {BotOptions, createBot} from "mineflayer";
-import {generateNewName, loadWords} from "./src/names/names";
-import {KickReason} from "./types/kickReason";
-import {loadConfig} from "./src/config/loadConfig";
+import {loadWords} from "./src/names/names";
+import {login} from "./src/minecraft/login";
+import {BotOptions} from "mineflayer";
+import {spawnInstances} from "./src/spawner/spawnInstances";
+import {generateSessionData} from "./src/spawner/generateSessionData";
 
-
-export const loginBot = async (config: BotOptions) => {
-
-    const bot = createBot(config);
-    let name = config.username;
-
-    bot.once('spawn', async () => {
-        bot.chat("Hello!");
-        console.info(`Bot ${name} has connected to ${config.port}`);
-    });
-
-    bot.on("windowOpen", (window) => {
-
-        //TODO: Move somewhere else
-        const teamSlots = [1, 3, 5, 7];
-        const titleObject = JSON.parse(window.title);
-
-        if (titleObject.text === "Choose your team") {
-            bot.clickWindow(5, 0, 0);
-        } else if (titleObject.text === "Choose your class!") {
-            let slot = teamSlots[Math.round(Math.random() * (teamSlots.length - 1))];
-            bot.clickWindow(slot, 0, 0);
-        }
-    })
-
-    bot.on('kicked', (kickReason) => {
-        const reason: KickReason = JSON.parse(kickReason);
-        console.error(`Bot ${name} was kicked. -> Reason: ${reason.text ?? "Unknown Reason"}`)
-    });
-    bot.on('error', (err) => {
-        console.error(`Bot ${name} experienced an error!\n${err.stack}`)
-    });
-}
 
 (async () => {
 
-    const config = await loadConfig("./config.json");
-    await loadWords(config.namePath);
 
-    const hostName: string = config.hostname ?? "localhost";
-    const port: number = config.port ?? 25565;
+    const args = require('minimist')(process.argv.slice(2));
 
+    //Get data we want from the command line args
+    const child = args["child"] as boolean ?? false;
 
-    const configs: BotOptions[] = [];
-    for (let idx = 0; idx < config.amount; idx++) {
-        let name = generateNewName();
-        configs.push(
-            {
-                "host": hostName,
-                "port": port,
-                "username": await name
-            }
-        );
+    if (!child) {
+        const sessions = args["sessions"] ?? 2 as number;
+        const totalUsers = args["amount"] ?? 11 as number;
+        const host = args["host"] ?? "localhost" as string;
+        const port = args["port"] as number ?? 25565;
+        const namePath = args["namePath"] ?? "./resources/names.txt" as string;
+        await loadWords(namePath);
+
+        let sessionData = await generateSessionData(sessions, totalUsers, host, port);
+        await spawnInstances(sessionData);
+    } else {
+        const data = args["data"] ?? "" as string;
+        let loginData: BotOptions[] = (!data) ? [] : JSON.parse(Buffer.from(data, 'base64').toString());
+
+        let success = 0;
+        await Promise.all(loginData.map(async (config) => {
+            await login(config);
+        }));
+        console.info(`Logged in ${success}/${loginData.length} sessions.`);
     }
-
-    configs.map(async (config) => loginBot(config))
 })();
-
-

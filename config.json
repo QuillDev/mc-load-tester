@@ -1,6 +1,0 @@
-{
-    "amount": 10,
-    "hostname": "localhost",
-    "port": 25575,
-    "namePath": "./names.txt"
-}
