@@ -12,7 +12,10 @@ export const generateBotConfigs = async (amount: number, host?: string, port?: n
                 port: port ?? 25565,
                 username: await name,
                 viewDistance: 'tiny',
-                skipValidation: true
+                skipValidation: true,
+                loadInternalPlugins: false,
+                colorsEnabled: false,
+                chat: "disabled"
             }
         );
     }
