@@ -1,12 +1,32 @@
 import {loadWords} from "./src/names/names";
 import {login} from "./src/minecraft/login";
-import {BotOptions} from "mineflayer";
+import {Bot, BotOptions} from "mineflayer";
 import {spawnInstances} from "./src/spawner/spawnInstances";
 import {generateSessionData} from "./src/spawner/generateSessionData";
+import { pathfinder, Movements, goals } from 'mineflayer-pathfinder'
+import MinecraftData from "minecraft-data";
 
+const getRandomLocation = async (bot: Bot) => {
+    const oldPos = bot.entity.position
+    const x = oldPos.x + ((Math.random() * maxRandom) - maxRandom / 2.0)
+    const z = oldPos.z + ((Math.random() * maxRandom) - maxRandom / 2.0)
+    return new goals.GoalNear(x, oldPos.y, z, 1)
+}
+const maxRandom = 8
+const moveRandom = async (bot: Bot) => {
+    const goal = await getRandomLocation(bot)
 
+    console.log(`Moving ${bot.username} -> ${goal.x} ${goal.y} ${goal.z}`)
+    //Clean up bots that go afk
+    const clearer = setTimeout(() => { moveRandom(bot) }, 4000);
+
+    //Make the bots move and clear the timeout
+    await bot.pathfinder.goto(goal).then(() => {
+        clearTimeout(clearer)
+        moveRandom(bot)
+    }).catch((_) => null);
+}
 (async () => {
-
 
     const args = require('minimist')(process.argv.slice(2));
 
@@ -30,7 +50,21 @@ import {generateSessionData} from "./src/spawner/generateSessionData";
 
         let success = 0;
         await Promise.all(loginData.map(async (config) => {
-            await login(config).then(() => success++);
+            const bot = await login(config)
+            success++
+
+            bot.on('spawn', () => {
+                bot.chat(`Hello I'm ${bot.username}`)
+
+                const mcData = MinecraftData(bot.version)
+                bot.loadPlugin(pathfinder)
+                var defaultMove = new Movements(bot, mcData)
+                defaultMove.allowFreeMotion = false
+                bot.pathfinder.setMovements(defaultMove)
+
+                moveRandom(bot)
+            })
+
         }));
         console.info(`Processed ${success}/${loginData.length} sessions.`);
     }

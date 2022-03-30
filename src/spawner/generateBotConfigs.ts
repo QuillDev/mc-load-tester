@@ -13,10 +13,10 @@ export const generateBotConfigs = async (amount: number, host?: string, port?: n
                 username: await name,
                 viewDistance: 'tiny',
                 skipValidation: true,
-                loadInternalPlugins: false,
+                // loadInternalPlugins: false,
                 colorsEnabled: false,
-                chat: "disabled",
-                physicsEnabled: false,
+                // chat: "disabled",
+                // physicsEnabled: false,
                 keepAlive: true
             }
         );

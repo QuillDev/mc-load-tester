@@ -8,13 +8,15 @@
     "start": "ts-node index.ts"
   },
   "devDependencies": {
-    "@types/node": "^16.9.6",
+    "@types/node": "^17.0.23",
     "ts-node": "^10.2.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "mineflayer": "^3.11.1",
+    "minecraft-data": "^2.220.0",
+    "mineflayer": "^4.2.0",
+    "mineflayer-pathfinder": "^2.0.0",
     "minimist": "^1.2.5",
     "tiny-worker": "^2.3.0"
   }

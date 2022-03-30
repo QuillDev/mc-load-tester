@@ -10,6 +10,7 @@ export const login = async (config: BotOptions): Promise<Bot> => {
         console.info(`Bot ${name} has connected to ${config.port}`);
     });
 
+    //TODO: Clean up
     bot.on('kicked', (kickReason) => {
         const reason: KickReason = JSON.parse(kickReason);
         console.error(`Bot ${name} was kicked. -> Reason: ${reason.text ?? "Unknown Reason"}`)
