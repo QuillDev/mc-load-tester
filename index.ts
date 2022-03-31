@@ -53,7 +53,7 @@ const moveRandom = async (bot: Bot) => {
             const bot = await login(config)
             success++
 
-            bot.on('spawn', () => {
+            bot.once('spawn', () => {
                 bot.chat(`Hello I'm ${bot.username}`)
 
                 const mcData = MinecraftData(bot.version)
@@ -62,10 +62,16 @@ const moveRandom = async (bot: Bot) => {
                 defaultMove.allowFreeMotion = false
                 bot.pathfinder.setMovements(defaultMove)
 
-                moveRandom(bot)
+            })
+
+            bot.on('chat', (_, message) => {
+                if(message === "move"){
+                    moveRandom(bot)
+                }
             })
 
         }));
+
         console.info(`Processed ${success}/${loginData.length} sessions.`);
     }
 })();
