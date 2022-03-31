@@ -10,21 +10,21 @@ const getRandomLocation = async (bot: Bot) => {
     const oldPos = bot.entity.position
     const x = oldPos.x + ((Math.random() * maxRandom) - maxRandom / 2.0)
     const z = oldPos.z + ((Math.random() * maxRandom) - maxRandom / 2.0)
-    return new goals.GoalNear(x, oldPos.y, z, 1)
+    return new goals.GoalNearXZ(x, z, 3)
 }
 const maxRandom = 25
 const moveRandom = async (bot: Bot) => {
     const goal = await getRandomLocation(bot)
 
-    console.log(`Moving ${bot.username} -> ${goal.x} ${goal.y} ${goal.z}`)
+    console.log(`Moving ${bot.username} -> ${goal.x} ${goal.z}`)
     //Clean up bots that go afk
-    const clearer = setTimeout(() => { moveRandom(bot) }, 4000);
+    const clearer = setTimeout(() => { moveRandom(bot) }, 2000);
 
     //Make the bots move and clear the timeout
     await bot.pathfinder.goto(goal).then(() => {
         clearTimeout(clearer)
         moveRandom(bot)
-    }).catch((_) => null);
+    }).catch((_) => {});
 }
 (async () => {
 
@@ -58,9 +58,10 @@ const moveRandom = async (bot: Bot) => {
 
                 const mcData = MinecraftData(bot.version)
                 bot.loadPlugin(pathfinder)
-                var defaultMove = new Movements(bot, mcData)
-                defaultMove.allowFreeMotion = false
-                bot.pathfinder.setMovements(defaultMove)
+                var moves = new Movements(bot, mcData)
+                moves.canDig = false
+                moves.allow1by1towers = false
+                bot.pathfinder.setMovements(moves)
 
             })
 

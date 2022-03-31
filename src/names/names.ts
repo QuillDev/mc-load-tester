@@ -23,6 +23,7 @@ export const generateNewName = async (): Promise<string> => {
         return generateNewName();
     }
 
+    name = name.substring(0, Math.min(10, name.length)) + "v" + process.env.npm_package_version
     names.push(name);
 
     return name;
