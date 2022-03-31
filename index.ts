@@ -1,31 +1,12 @@
-import {loadWords} from "./src/names/names";
-import {login} from "./src/minecraft/login";
-import {Bot, BotOptions} from "mineflayer";
-import {spawnInstances} from "./src/spawner/spawnInstances";
-import {generateSessionData} from "./src/spawner/generateSessionData";
-import { pathfinder, Movements, goals } from 'mineflayer-pathfinder'
+import { loadWords } from "./src/names/names";
+import { login } from "./src/minecraft/login";
+import { BotOptions } from "mineflayer";
+import { spawnInstances } from "./src/spawner/spawnInstances";
+import { generateSessionData } from "./src/spawner/generateSessionData";
+import { pathfinder, Movements } from 'mineflayer-pathfinder'
 import MinecraftData from "minecraft-data";
+import { moveRandom } from "./src/movement/movement"
 
-const getRandomLocation = async (bot: Bot) => {
-    const oldPos = bot.entity.position
-    const x = oldPos.x + ((Math.random() * maxRandom) - maxRandom / 2.0)
-    const z = oldPos.z + ((Math.random() * maxRandom) - maxRandom / 2.0)
-    return new goals.GoalNearXZ(x, z, 3)
-}
-const maxRandom = 25
-const moveRandom = async (bot: Bot) => {
-    const goal = await getRandomLocation(bot)
-
-    console.log(`Moving ${bot.username} -> ${goal.x} ${goal.z}`)
-    //Clean up bots that go afk
-    const clearer = setTimeout(() => { moveRandom(bot) }, 2000);
-
-    //Make the bots move and clear the timeout
-    await bot.pathfinder.goto(goal).then(() => {
-        clearTimeout(clearer)
-        moveRandom(bot)
-    }).catch((_) => {});
-}
 (async () => {
 
     const args = require('minimist')(process.argv.slice(2));
@@ -55,18 +36,20 @@ const moveRandom = async (bot: Bot) => {
 
             bot.once('spawn', () => {
                 bot.chat(`Hello I'm ${bot.username}`)
-
-                const mcData = MinecraftData(bot.version)
                 bot.loadPlugin(pathfinder)
-                var moves = new Movements(bot, mcData)
+
+                const data = MinecraftData(bot.version)
+
+                var moves = new Movements(bot, data)
                 moves.canDig = false
                 moves.allow1by1towers = false
+                moves.allowFreeMotion = true
                 bot.pathfinder.setMovements(moves)
 
             })
 
             bot.on('chat', (_, message) => {
-                if(message === "move"){
+                if (message === "move") {
                     moveRandom(bot)
                 }
             })
@@ -76,3 +59,4 @@ const moveRandom = async (bot: Bot) => {
         console.info(`Processed ${success}/${loginData.length} sessions.`);
     }
 })();
+
