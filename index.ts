@@ -12,7 +12,7 @@ const getRandomLocation = async (bot: Bot) => {
     const z = oldPos.z + ((Math.random() * maxRandom) - maxRandom / 2.0)
     return new goals.GoalNear(x, oldPos.y, z, 1)
 }
-const maxRandom = 8
+const maxRandom = 25
 const moveRandom = async (bot: Bot) => {
     const goal = await getRandomLocation(bot)
 
